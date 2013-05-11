@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.commands.local;
+package net.zetaeta.bukkit.util.commands.local;
 
 public class LocalCommandReflectionException {
 

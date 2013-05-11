@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit;
+package net.zetaeta.bukkit.util;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

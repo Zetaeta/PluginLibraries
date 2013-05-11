@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.configuration;
+package net.zetaeta.bukkit.util.configuration;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,10 +6,10 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import net.zetaeta.bukkit.util.StringUtil;
-import net.zetaeta.bukkit.util.Util;
+import net.zetaeta.util.ArrayUtils;
+import net.zetaeta.util.StringUtil;
+import net.zetaeta.util.Util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
@@ -90,7 +90,7 @@ public class PluginConfiguration extends YamlConfiguration {
                 }
                 else { // if this node is a a subnode of a supernode of the supernode of the previous node.
                     int removed = 1 + currIndent - effectiveIndent; // number of indents the previous node was farther than the current, + 1 for the previous node itself
-                    String[] reverse = Util.reverse(currNodes.toString().split("\\."));
+                    String[] reverse = ArrayUtils.reverse(currNodes.toString().split("\\."));
                     if (reverse.length == 0) {
                         lastCheckedLine = i;
                         continue;
@@ -225,7 +225,7 @@ public class PluginConfiguration extends YamlConfiguration {
                 }
                 else { // if this node is a a subnode of a supernode of the supernode of the previous node.
                     int removed = 1 + currIndent - effectiveIndent; // number of indents the previous node was farther than the current, + 1 for the previous node itself
-                    String[] reverse = Util.reverse(currNodes.toString().split("\\."));
+                    String[] reverse = ArrayUtils.reverse(currNodes.toString().split("\\."));
                     
                     for (int j=0; j<removed && j<reverse.length; ++j) {
                         if (!(currNodes.length() == 0) && currNodes.charAt(currNodes.length() - 1) == '.') {

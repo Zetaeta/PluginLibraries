@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.commands;
+package net.zetaeta.bukkit.util.commands;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.commands.local;
+package net.zetaeta.bukkit.util.commands.local;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +31,7 @@ public interface LocalCommand {
      *
      * @return Set of LocalCommandExecutors registered as subcommands.
      */
-    public Collection<LocalCommand> getOrderedSubCommands();
+//    public Collection<LocalCommand> getOrderedSubCommands();
     
     /**
      * @return aliases of all registered subcommands.

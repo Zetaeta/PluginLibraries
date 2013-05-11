@@ -1,23 +1,34 @@
-package net.zetaeta.bukkit.commands;
+package net.zetaeta.bukkit.util.commands;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
-import net.zetaeta.bukkit.util.ReflectionUtil;
+import net.zetaeta.util.ReflectionUtil;
+import net.zetaeta.util.StringUtil;
+import net.zetaeta.util.Util;
+import net.zetaeta.util.ArrayUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.google.common.collect.Lists;
 
 /**
  * Manages commands for this library, with facilities for dynamically registering and unregistering commands.
@@ -125,7 +136,7 @@ public class CommandsManager {
      * @return Command instance created by the manager.
      */
     public Command registerCommand(String commandName, CommandExecutor executor, String[] aliases, String usage, String description, String permission) {
-        return registerCommand(commandName, executor, aliases, usage, description, permission, "§cYou do not have access to that command!");
+        return registerCommand(commandName, executor, aliases, usage, description, permission, "ï¿½cYou do not have access to that command!");
     }
     
     /**
@@ -302,8 +313,8 @@ public class CommandsManager {
         List<Command> registered = new ArrayList<Command>();
         
         for (Method m : methods) {
-            if (m.isAnnotationPresent(net.zetaeta.bukkit.commands.Command.class)) {
-                net.zetaeta.bukkit.commands.Command cmdAnnot = m.getAnnotation(net.zetaeta.bukkit.commands.Command.class);
+            if (m.isAnnotationPresent(net.zetaeta.bukkit.util.commands.Command.class)) {
+                net.zetaeta.bukkit.util.commands.Command cmdAnnot = m.getAnnotation(net.zetaeta.bukkit.util.commands.Command.class);
                 String name = cmdAnnot.value();
                 String[] aliases = cmdAnnot.aliases();
                 String description = cmdAnnot.description();
@@ -312,15 +323,50 @@ public class CommandsManager {
                 String permMessage = cmdAnnot.permissionMessage();
                 try {
                     Command cmd = registerCommand(name, executor, aliases, usage, description, perm, permMessage, m);
-                    commandMap.register(plugin.getName(), cmd);
+//                    commandMap.register(plugin.getName(), cmd);
                     registered.add(cmd);
                 } catch (Throwable e) {
                     plugin.getLogger().severe("Could not register command " + name + "!");
                     e.printStackTrace();
                 }
             }
+            else if (m.getName().equals("onCommand") && Arrays.equals(m.getParameterTypes(), new Class<?>[] {CommandSender.class, Command.class, String.class, String[].class}) && SuperCommand.class.isAssignableFrom(clazz)) {
+                registered.add(registerCommand((SuperCommand) executor));
+            }
         }
         return registered;
+    }
+    
+    public Command registerCommand(SuperCommand command) {
+        Class clazz = PluginCommand.class;
+        try {
+            Constructor<PluginCommand> cst = clazz.getDeclaredConstructor(String.class, Plugin.class);
+            cst.setAccessible(true);
+            PluginCommand pc = cst.newInstance(command.getName(), plugin);
+            pc.setAliases(Lists.newArrayList(command.getAliases()));
+            pc.setDescription(command.getDescription());
+            pc.setUsage(ArrayUtils.join(command.getUsage(), "\n"));
+            pc.setExecutor(command);
+   /*         String perm = command.getPermission();
+            if (perm != null && !perm.equals("")) {
+                pc.setPermission(perm);
+                String pm = command.getPermissionMessage();
+                if (pm != null && !pm.equals("")) {
+                    pc.setPermissionMessage(pm);
+                }
+            }
+            */
+            System.out.println("registerCommand(SuperCommand)");
+            System.out.println(commandMap.register(plugin.getName(), pc));
+            System.out.println(commandMap.getCommand("game").getAliases());
+            System.out.println(((PluginCommand) commandMap.getCommand("ctf")).getExecutor());
+            System.out.println(((PluginCommand) commandMap.getCommand("game")).getExecutor());
+            System.out.println(pc.getExecutor());
+            return pc;
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            plugin.getLogger().log(Level.SEVERE, "Error registering command" + command.getName() + ": ", e);
+            return null;
+        }
     }
     
     /**

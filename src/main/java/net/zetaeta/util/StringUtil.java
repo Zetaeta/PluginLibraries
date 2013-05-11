@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.util;
+package net.zetaeta.util;
 
 public class StringUtil {
     

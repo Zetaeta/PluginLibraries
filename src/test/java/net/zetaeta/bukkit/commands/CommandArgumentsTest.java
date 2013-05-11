@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import net.zetaeta.bukkit.util.Util;
+import net.zetaeta.util.StringUtil;
 
 import org.bukkit.command.CommandSender;
 import org.junit.Test;
@@ -68,10 +68,10 @@ private static Logger log = Logger.getLogger("CommandArguments");
 //    }
     
     public static CommandArgumentsTest processArguments(String[] args, String[] boolFlags, String[] valueFlags) {
-        log.info(Util.arrayAsString(args));
-        log.info(Util.arrayAsString(boolFlags));
-        log.info(Util.arrayAsString(valueFlags));
-        CommandArgumentsTest cArgs = new CommandArgumentsTest(args);
+        log.info(StringUtil.arrayAsString(args));
+        log.info(StringUtil.arrayAsString(boolFlags));
+        log.info(StringUtil.arrayAsString(valueFlags));
+        CommandArgumentsTest cArgs = new CommandArgumentsTest();
         if (cArgs.process(Arrays.asList(boolFlags), Arrays.asList(valueFlags))) {
             return cArgs;
         }
@@ -81,7 +81,7 @@ private static Logger log = Logger.getLogger("CommandArguments");
     public static CommandArgumentsTest processArguments(String[] args, String[] boolFlags, String[] valueFlags, CommandSender errorReciever) {
         CommandArgumentsTest cArgs = processArguments(args, boolFlags, valueFlags);
         if (cArgs == null) {
-            errorReciever.sendMessage("§cYour command " + Util.arrayAsString(args) + " could not be processed.");
+            errorReciever.sendMessage("ï¿½cYour command " + StringUtil.arrayAsString(args) + " could not be processed.");
         }
         return cArgs;
     }

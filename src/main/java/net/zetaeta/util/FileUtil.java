@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.util;
+package net.zetaeta.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,17 +11,15 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
-import net.zetaeta.bukkit.annotation.NotNull;
 
 public class FileUtil {
-    public static String fileToString(@NotNull File file) {
+    public static String fileToString(File file) {
         Util.notNull("File cannot be null!", file);
         if (!file.exists()) {
             throw new IllegalArgumentException("File must exist!");
         }
         StringBuilder sb = new StringBuilder((int) file.length() / 2);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try(BufferedReader reader = new BufferedReader(new FileReader(file));) {
             String buf;
             while ((buf = reader.readLine()) != null) {
                 sb.append(buf).append(System.getProperty("line.separator"));

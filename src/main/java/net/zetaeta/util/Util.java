@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.util;
+package net.zetaeta.util;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -12,41 +12,19 @@ import java.util.Arrays;
 public class Util {
     
     /**
-     * Adds the basic colours (0 - f) to a String by replacing "&<colour digit>" with §<colour digit>
+     * Adds the basic colours (0 - f) to a String by replacing "&<colour digit>" with ï¿½<colour digit>
      * 
      * @param string String to colourise
      * @return Colourised string.
      */
     public static String addBasicColour(String string) {
-        string = string.replaceAll("(§([a-fA-F0-9]))", "§$2");
+        string = string.replaceAll("(ï¿½([a-fA-F0-9]))", "ï¿½$2");
 
-        string = string.replaceAll("(&([a-fA-F0-9]))", "§$2");
+        string = string.replaceAll("(&([a-fA-F0-9]))", "ï¿½$2");
 
         return string;
       }
     
-    /**
-     * Removes the first index of an array of <T>. Convenience method for Arrays.copyOfRange(array, 1, array.length)
-     * 
-     * @param array Array of <T> to be modified
-     * @return array without the first index.
-     */
-    public static <T> T[] removeFirstIndex(T[] array) {
-        if (array.length == 0) {
-            return array;
-        }
-        return Arrays.copyOfRange(array, 1, array.length);
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <T> T[] reverse(T[] array) {
-        T[] newArray = (T[]) Array.newInstance(array.getClass().getComponentType(), array.length);
-        int len = array.length - 1;
-        for (int i=0; i<array.length; ++i) {
-            newArray[i] = array[len-i];
-        }
-        return newArray;
-    }
     
     public static boolean booleanValue(int i) {
         return i == 0 ? false : true;

@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.commands;
+package net.zetaeta.bukkit.util.commands;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.zetaeta.bukkit.ZetaPlugin;
 import net.zetaeta.bukkit.util.PermissionUtil;
+import net.zetaeta.bukkit.util.ZetaPlugin;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,7 +31,7 @@ public class CommandManager {
 	@SuppressWarnings("boxing")
 	public boolean onCommand(CommandSender sndr, Command cmd, String cmdlbl, String[] args) {
 		if(!executors.containsKey(cmd.getName())) {
-			sndr.sendMessage("§cINTERNAL ERROR: CommandHandler executor class not found. Please report this to your Administrator.");
+			sndr.sendMessage("ï¿½cINTERNAL ERROR: CommandHandler executor class not found. Please report this to your Administrator.");
 			log.log(Level.SEVERE, "INTERNAL ERROR: CommandHandler executor class for " + cmd.getName() + " not found!");
 			return true;
 		}
@@ -58,13 +58,13 @@ public class CommandManager {
 		Class<?>[] params = commandMethod.getParameterTypes();
 		
 		if (params.length != 2) {
-			sndr.sendMessage("§cINTERNAL ERROR: CommandHandler executor method has wrong number of arguments. Please report this to your Administrator.");
+			sndr.sendMessage("ï¿½cINTERNAL ERROR: CommandHandler executor method has wrong number of arguments. Please report this to your Administrator.");
 			log.log(Level.SEVERE, "INTERNAL ERROR: CommandHandler executor method for " + cmd.getName() + " has wrong number of arguments!");
 			return true;
 		}
 		
 		if(params[0] != CommandSender.class || params[1] != String[].class) {
-			sndr.sendMessage("§cINTERNAL ERROR: CommandHandler executor method has improper arguments. Please report this to your Administrator.");
+			sndr.sendMessage("ï¿½cINTERNAL ERROR: CommandHandler executor method has improper arguments. Please report this to your Administrator.");
 			log.log(Level.SEVERE, "INTERNAL ERROR: CommandHandler executor method for " + cmd.getName() + " has improper arguments!");
 			return true;
 		}
@@ -73,15 +73,15 @@ public class CommandManager {
 			Boolean returns = (Boolean) commandMethod.invoke(executor, (Object)sndr, (Object[])args);
 			return returns;
 		} catch (IllegalAccessException e) {
-			sndr.sendMessage("§cINTERNAL ERROR: CommandHandler executor method inaccessible. Please report this to your Administrator.");
+			sndr.sendMessage("ï¿½cINTERNAL ERROR: CommandHandler executor method inaccessible. Please report this to your Administrator.");
 			plugin.log.log(Level.SEVERE, "INTERNAL ERROR: CommandHandler executor method for " + cmd.getName() + " inaccessible!");
 			return true;
 		} catch (IllegalArgumentException e) {
-			sndr.sendMessage("§cINTERNAL ERROR: CommandHandler executor method failed calling. Please report this to your Administrator.");
+			sndr.sendMessage("ï¿½cINTERNAL ERROR: CommandHandler executor method failed calling. Please report this to your Administrator.");
 			plugin.log.log(Level.SEVERE, "INTERNAL ERROR: CommandHandler executor method for " + cmd.getName() + " failed calling!");
 			return true;
 		} catch (InvocationTargetException e) {
-			sndr.sendMessage("§cINTERNAL ERROR: CommandHandler executor method failed calling. Please report this to your Administrator.");
+			sndr.sendMessage("ï¿½cINTERNAL ERROR: CommandHandler executor method failed calling. Please report this to your Administrator.");
 			plugin.log.log(Level.SEVERE, "INTERNAL ERROR: CommandHandler executor method for " + cmd.getName() + " failed calling!");
 			return true;
 		}
@@ -106,8 +106,8 @@ public class CommandManager {
 	public void registerCommandExecutor(Executor executor) {
 		Method[] executorMethods = executor.getClass().getMethods();
 		for(Method m : executorMethods) {
-			if(m.isAnnotationPresent(net.zetaeta.bukkit.commands.CommandHandler.class)) {
-				net.zetaeta.bukkit.commands.CommandHandler annot = m.getAnnotation(net.zetaeta.bukkit.commands.CommandHandler.class);
+			if(m.isAnnotationPresent(net.zetaeta.bukkit.util.commands.CommandHandler.class)) {
+				net.zetaeta.bukkit.util.commands.CommandHandler annot = m.getAnnotation(net.zetaeta.bukkit.util.commands.CommandHandler.class);
 				if(annot.permission().equals("")) {
 					executors.put(annot.value(), new ExecutorMethod(executor, m));
 				} else {

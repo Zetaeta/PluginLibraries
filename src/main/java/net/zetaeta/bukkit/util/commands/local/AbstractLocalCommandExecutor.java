@@ -1,7 +1,8 @@
-package net.zetaeta.bukkit.commands.local;
+package net.zetaeta.bukkit.util.commands.local;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.zetaeta.bukkit.util.Util;
+import net.zetaeta.util.ArrayUtils;
 
 import org.bukkit.command.CommandSender;
 
@@ -159,12 +160,12 @@ public abstract class AbstractLocalCommandExecutor implements LocalCommand {
      * @return True if a subcommand is run, false otherwise. It is recommended for the current command to return true if this method returns true.
      */
     public boolean trySubCommand(CommandSender sender, String alias, String[] args) {
-        
+        System.out.println("trySubCommand: args = " + Arrays.toString(args));
         if (args.length < 1) {
             return false;
         }
         if (subCommands.containsKey(args[0])) {
-            if (subCommands.get(args[0]).execute(sender, args[0], Util.removeFirstIndex(args))) {
+            if (subCommands.get(args[0]).execute(sender, args[0], ArrayUtils.removeFirstElement(args))) {
                 return true;
             }
             else {
@@ -181,7 +182,7 @@ public abstract class AbstractLocalCommandExecutor implements LocalCommand {
             return subCommands.get(alias);
         }
         else {
-            return subCommands.get(aliases[0]) == null ? null : subCommands.get(aliases[0]).getSubCommand(Util.removeFirstIndex(aliases));
+            return subCommands.get(aliases[0]) == null ? null : subCommands.get(aliases[0]).getSubCommand(ArrayUtils.removeFirstElement(aliases));
         }
     }
     
@@ -190,14 +191,17 @@ public abstract class AbstractLocalCommandExecutor implements LocalCommand {
             return subCommands.get(aliases[0]);
         }
         else {
-            return subCommands.get(aliases[0]) == null ? null : subCommands.get(aliases[0]).getSubCommand(Util.removeFirstIndex(aliases));
+            return subCommands.get(aliases[0]) == null ? null : subCommands.get(aliases[0]).getSubCommand(ArrayUtils.removeFirstElement(aliases));
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public abstract boolean execute(CommandSender sender, String alias, String[] args);
+//    public abstract boolean execute(CommandSender sender, String alias, String[] args);
+    public boolean execute(CommandSender sender, String alias, String[] args) {
+        return trySubCommand(sender, alias, args);
+    }
     
     public abstract void sendUsage(CommandSender target);
     

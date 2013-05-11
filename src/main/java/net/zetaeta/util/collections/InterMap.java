@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.util.collections;
+package net.zetaeta.util.collections;
 
 import java.util.Map;
 

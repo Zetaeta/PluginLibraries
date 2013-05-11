@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.commands;
+package net.zetaeta.bukkit.util.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.zetaeta.bukkit.Useless;
-import net.zetaeta.bukkit.util.StringUtil;
+import net.zetaeta.bukkit.util.Useless;
+import net.zetaeta.util.StringUtil;
 
 import org.bukkit.command.CommandSender;
 
@@ -70,7 +70,7 @@ public class CommandArguments {
     public static CommandArguments processArguments(String alias, String[] args, String[] boolFlags, String[] valueFlags, CommandSender errorReciever) {
         CommandArguments cArgs = processArguments(alias, args, boolFlags, valueFlags);
         if (cArgs == null) {
-            errorReciever.sendMessage("§cYour command " + StringUtil.arrayAsString(args) + " could not be processed.");
+            errorReciever.sendMessage("ï¿½cYour command " + StringUtil.arrayAsString(args) + " could not be processed.");
         }
         return cArgs;
     }

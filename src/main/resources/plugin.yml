@@ -1,0 +1,5 @@
+name: PluginLibraries
+main: net.zetaeta.bukkit.LibraryMain
+author: Zetaeta
+description: "Zetaeta's plugin libraries, packed into a separate plugin for modularity"
+version: 0.1

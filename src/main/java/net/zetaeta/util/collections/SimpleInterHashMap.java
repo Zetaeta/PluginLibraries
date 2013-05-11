@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.util.collections;
+package net.zetaeta.util.collections;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -15,7 +15,7 @@ import java.util.Set;
  * i.e. it uses the same type for key and value. As it tries to convert returned objects to type V due to restrictions in the Map interface, 
  * it you use it with a map of two different types and it gets a key by a value, it will throw a ClassCastException.
  * */
-public class SimpleInterHashMap<K, V> implements Map<K, V> {
+public class SimpleInterHashMap<K, V> implements InterMap<K, V> {
 	private Map<K, V> mapto = new HashMap<K, V>();
 	private Map<V, K> mapfrom = new HashMap<V, K>();
 	

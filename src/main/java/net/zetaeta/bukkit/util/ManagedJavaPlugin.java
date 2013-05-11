@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit;
+package net.zetaeta.bukkit.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,13 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import net.zetaeta.bukkit.commands.CommandsManager;
-import net.zetaeta.bukkit.configuration.PluginConfiguration;
-import net.zetaeta.bukkit.util.FileUtil;
+import net.zetaeta.bukkit.util.configuration.PluginConfiguration;
+import net.zetaeta.util.FileUtil;
 
-import org.bukkit.command.Command;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -26,19 +23,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class ManagedJavaPlugin extends JavaPlugin {
     private File configFile;
     private PluginConfiguration config;
-    
-    /**
-     * Represents the CommandsManager for this plugin.
-     */
-    protected CommandsManager commandsManager;
-    
-    /**
-     * @param name Name of the command to get
-     * @return Command with label <code>name</code>.
-     */
-    public Command getGenericCommand(String name) {
-        return commandsManager.getCommand(name, false);
-    }
     
     @Override
     public PluginConfiguration getConfig() {

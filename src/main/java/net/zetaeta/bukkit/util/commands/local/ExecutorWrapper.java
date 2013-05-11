@@ -1,10 +1,11 @@
-package net.zetaeta.bukkit.commands.local;
+package net.zetaeta.bukkit.util.commands.local;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
-import net.zetaeta.bukkit.commands.CommandArguments;
 import net.zetaeta.bukkit.util.PermissionUtil;
+import net.zetaeta.bukkit.util.commands.CommandArguments;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,16 +27,16 @@ public class ExecutorWrapper extends AbstractLocalCommandExecutor {
         annotation = executorMethod.getAnnotation(Command.class);
         usage = annotation.usage();
         shortUsage = annotation.shortUsage();
-        aliases = annotation.aliases();
-        if (aliases.length == 0) {
-            aliases = new String[] {annotation.value()};
-        }
+        aliases = Arrays.copyOf(annotation.aliases(), annotation.aliases().length + 1);
+        aliases[aliases.length - 1] = annotation.value();
+        System.out.println("ExecutorWrapper: " + Arrays.toString(aliases));
         useCmdArgs = annotation.useCommandArguments();
-//        boolFlags = cmdAnnotation.boolFlags();
-//        valueFlags = cmdAnnotation.valueFlags();
-//        checkPermissions = cmdAnnotation.checkPermissions();
-//        playersOnly = cmdAnnotation.playersOnly();
-        permission = annotation.permission();
+        if (annotation.inheritPermission()) {
+            permission = parent.getPermission() + annotation.permission();
+        }
+        else {
+            permission = annotation.permission();
+        }
         Class<?>[] params = executorMethod.getParameterTypes();
         if (!useCmdArgs && params.length == 2 && params[1] == CommandArguments.class) {
             useCmdArgs = true;
@@ -51,7 +52,7 @@ public class ExecutorWrapper extends AbstractLocalCommandExecutor {
             return true;
         }
         if (annotation.playersOnly() && !(sender instanceof Player)) {
-            sender.sendMessage("§cThis command can only be run by a player!");
+            sender.sendMessage("ï¿½cThis command can only be run by a player!");
             return true;
         }
         boolean success;
@@ -64,16 +65,16 @@ public class ExecutorWrapper extends AbstractLocalCommandExecutor {
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            sender.sendMessage("§cAn internal error occurred while executing this command.");
+            sender.sendMessage("ï¿½cAn internal error occurred while executing this command.");
             return true;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            sender.sendMessage("§cAn internal error occurred while executing this command.");
+            sender.sendMessage("ï¿½cAn internal error occurred while executing this command.");
             return true;
         } catch (InvocationTargetException e) {
             e.printStackTrace();
             e.getCause().printStackTrace();
-            sender.sendMessage("§cAn internal error occurred while executing this command.");
+            sender.sendMessage("ï¿½cAn internal error occurred while executing this command.");
             return true;
         }
         return success;

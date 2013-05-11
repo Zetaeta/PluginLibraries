@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.commands;
+package net.zetaeta.bukkit.util.commands;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -153,8 +153,8 @@ public class DynamicPluginCommand extends Command {
         for (Method m : methods) {
             Annotation[] annots = m.getAnnotations();
             for (Annotation annot : annots) {
-                if (annot.annotationType() == net.zetaeta.bukkit.commands.Command.class) {
-                    net.zetaeta.bukkit.commands.Command cmdAnnot = (net.zetaeta.bukkit.commands.Command) annot;
+                if (annot.annotationType() == net.zetaeta.bukkit.util.commands.Command.class) {
+                    net.zetaeta.bukkit.util.commands.Command cmdAnnot = (net.zetaeta.bukkit.util.commands.Command) annot;
                     if (cmdAnnot.value().equalsIgnoreCase(this.getName())) {
                         if (m.getName().equals("onCommand")) {
                             isAnnotated = false;

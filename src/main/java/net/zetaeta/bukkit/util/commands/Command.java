@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.commands;
+package net.zetaeta.bukkit.util.commands;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -46,5 +46,5 @@ public @interface Command {
     /**
      * Message to display if the user has not permission for the command.
      */
-    public String permissionMessage() default "§cYou do not have access to that command!";
+    public String permissionMessage() default "ï¿½cYou do not have access to that command!";
 }

@@ -1,7 +1,9 @@
-package net.zetaeta.bukkit.util;
+package net.zetaeta.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReflectionUtil {
     @SuppressWarnings("unchecked")
@@ -20,5 +22,16 @@ public class ReflectionUtil {
             }
         }
         return null;
+    }
+    
+    public static Field[] getAllFields(Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        for (; clazz.getSuperclass() != Object.class; clazz = clazz.getSuperclass()) {
+            Field[] classFields = clazz.getDeclaredFields();
+            for (Field field : classFields) {
+                fields.add(field);
+            }
+        }
+        return fields.toArray(new Field[fields.size()]);
     }
 }

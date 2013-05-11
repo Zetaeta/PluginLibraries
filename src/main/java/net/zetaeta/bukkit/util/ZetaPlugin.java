@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit;
+package net.zetaeta.bukkit.util;
 
 import java.util.logging.Logger;
 

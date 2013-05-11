@@ -1,8 +1,6 @@
 package net.zetaeta.bukkit.configuration;
 
-import static org.junit.Assert.*;
-
-import net.zetaeta.bukkit.configuration.PluginConfiguration;
+import net.zetaeta.bukkit.util.configuration.PluginConfiguration;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.junit.Test;

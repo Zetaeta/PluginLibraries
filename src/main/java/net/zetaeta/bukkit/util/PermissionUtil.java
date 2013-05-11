@@ -32,7 +32,7 @@ public class PermissionUtil {
             hasPerm = sender.hasPermission(permission);
         }
         if (!hasPerm && warn) {
-            sender.sendMessage("§cYou do not have access to that command!");
+            sender.sendMessage("ï¿½cYou do not have access to that command!");
         }
         return hasPerm;
     }

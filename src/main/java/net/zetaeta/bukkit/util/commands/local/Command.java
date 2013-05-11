@@ -1,4 +1,4 @@
-package net.zetaeta.bukkit.commands.local;
+package net.zetaeta.bukkit.util.commands.local;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -11,13 +11,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
     String[] aliases();
-    String value() default "";
-    String[] usage();
-    String[] shortUsage();
+    String value();
+    String[] usage() default {};
+    String[] shortUsage() default {};
     boolean useCommandArguments() default false;
     String[] boolFlags() default {};
     String[] valueFlags() default {};
     String permission();
     boolean checkPermissions() default true;
     boolean playersOnly() default false;
+    /**
+     * Whether the command's permission is supposed to be the parent's permission prepended to
+     * the given permission.
+     */
+    boolean inheritPermission() default true;
 }
