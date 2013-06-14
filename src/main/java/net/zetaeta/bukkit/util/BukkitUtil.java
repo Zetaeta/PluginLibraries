@@ -12,7 +12,7 @@ public class BukkitUtil {
         T nearest = null;
         for (T t : entities) {
             double dist = t.getLocation().distance(location);
-            if (min == -1 || dist < min) {
+            if (min < 0 || dist < min) {
                 min = dist;
                 nearest = t;
             }

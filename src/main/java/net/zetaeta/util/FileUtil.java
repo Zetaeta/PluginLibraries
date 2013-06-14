@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 
 
@@ -45,5 +46,9 @@ public class FileUtil {
             Bukkit.getLogger().log(Level.SEVERE, "Error copying streams: " + in + " --> " + out);
             e.printStackTrace();
         }
+    }
+    
+    public static void copyDirectory(File from, File to) throws IOException {
+        FileUtils.copyDirectory(from, to);
     }
 }

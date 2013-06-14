@@ -21,13 +21,13 @@ import org.bukkit.command.CommandSender;
 
 public class SuperCommand extends DynamicCommandExecutor implements LocalCommand {
     
-    private Map<String, LocalCommand> subCommands = new HashMap<>();
-    private String[] usage, shortUsage;
-    private String name;
-    private String[] aliases;
-    private String permission;
-    private String description;
-    private String permissionMessage;
+    protected Map<String, LocalCommand> subCommands = new HashMap<>();
+    protected String[] usage, shortUsage;
+    protected String name;
+    protected String[] aliases;
+    protected String permission;
+    protected String description;
+    protected String permissionMessage;
      
     
     public SuperCommand(String commandName, String[] aliases) {
@@ -58,8 +58,6 @@ public class SuperCommand extends DynamicCommandExecutor implements LocalCommand
     
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        System.out.println("meoww");
-        sender.sendMessage("meow");
         System.out.println(this);
         if (args.length == 0) {
             sender.sendMessage(usage);
@@ -67,7 +65,11 @@ public class SuperCommand extends DynamicCommandExecutor implements LocalCommand
         }
         LocalCommand lc = subCommands.get(args[0]);
         if (lc != null) {
-            return lc.execute(sender, label, ArrayUtils.removeFirstElement(args));
+            boolean success = lc.execute(sender, label, ArrayUtils.removeFirstElement(args));
+            if (!success) {
+                sender.sendMessage(lc.getUsage());
+            }
+            return true;
         }
         sender.sendMessage(usage);
         System.out.println(subCommands);
