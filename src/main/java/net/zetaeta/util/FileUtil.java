@@ -48,7 +48,19 @@ public class FileUtil {
         }
     }
     
+    public static void cp_r(File from, File to) throws IOException {
+        copyDirectory(from, to);
+    }
+    
     public static void copyDirectory(File from, File to) throws IOException {
         FileUtils.copyDirectory(from, to);
+    }
+    
+    public static void rm_r(File dir) throws IOException {
+        removeDirectory(dir);
+    }
+    
+    public static void removeDirectory(File dir) throws IOException {
+        FileUtils.deleteDirectory(dir);
     }
 }

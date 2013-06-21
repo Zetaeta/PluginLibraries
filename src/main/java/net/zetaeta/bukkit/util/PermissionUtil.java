@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 
@@ -32,13 +33,17 @@ public class PermissionUtil {
             hasPerm = sender.hasPermission(permission);
         }
         if (!hasPerm && warn) {
-            sender.sendMessage("�cYou do not have access to that command!");
+            sender.sendMessage("\u00a7cYou do not have access to that command!");
         }
         return hasPerm;
     }
     
     
     public static boolean checkPermissionRecursive(CommandSender sender, String permission) {
+        if (Bukkit.getPluginManager().getPlugin("PermissionsEx") != null) {
+            System.out.println("deferring to PermissionsEx");
+            return sender.hasPermission(permission);
+        }
         String[] nodes = permission.split("\\.");
         if (nodes.length == 0) {
             return sender.hasPermission(permission);
@@ -51,6 +56,7 @@ public class PermissionUtil {
         List<String> toRegister = new ArrayList<String>(nodes.length);
         toRegister.add(permission);
         for (int i=nodes.length - 1, length = permission.length(); i > 0 && getPluginManager().getPermission(permIt) == null; --i) {
+            System.out.println("permIt = " + permIt);
             nodesIt.delete(length - nodes[i].length(), length);
             length -= nodes[i].length();
             if (nodesIt.charAt(nodesIt.length() - 1) == '.') {
@@ -64,15 +70,13 @@ public class PermissionUtil {
             getPluginManager().addPermission(new Permission(permIt));
         }
         Permission parent = getPluginManager().getPermission(permIt), current = parent, previous = current;
-        {
-            for (ListIterator<String> registerIt = toRegister.listIterator(toRegister.size() - 1); registerIt.hasPrevious();) {
-                String permStr = registerIt.previous();
-                current = new Permission(permStr);
-                current.addParent(previous, true);
-                previous = current;
-                if (!getPluginManager().getPermissions().contains(current)) {
-                    getPluginManager().addPermission(current);
-                }
+        for (ListIterator<String> registerIt = toRegister.listIterator(toRegister.size() - 1); registerIt.hasPrevious();) {
+            String permStr = registerIt.previous();
+            current = new Permission(permStr);
+            current.addParent(previous, true);
+            previous = current;
+            if (!getPluginManager().getPermissions().contains(current)) {
+                getPluginManager().addPermission(current);
             }
         }
         return sender.hasPermission(permission);

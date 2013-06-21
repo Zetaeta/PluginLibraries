@@ -21,7 +21,8 @@ import org.bukkit.command.CommandSender;
 
 public class SuperCommand extends DynamicCommandExecutor implements LocalCommand {
     
-    protected Map<String, LocalCommand> subCommands = new HashMap<>();
+    protected Map<String, LocalCommand> subCommandMap = new HashMap<>();
+    protected List<LocalCommand> subCommands = new ArrayList<>();
     protected String[] usage, shortUsage;
     protected String name;
     protected String[] aliases;
@@ -58,12 +59,11 @@ public class SuperCommand extends DynamicCommandExecutor implements LocalCommand
     
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        System.out.println(this);
         if (args.length == 0) {
             sender.sendMessage(usage);
             return true;
         }
-        LocalCommand lc = subCommands.get(args[0]);
+        LocalCommand lc = subCommandMap.get(args[0]);
         if (lc != null) {
             boolean success = lc.execute(sender, label, ArrayUtils.removeFirstElement(args));
             if (!success) {
@@ -72,14 +72,14 @@ public class SuperCommand extends DynamicCommandExecutor implements LocalCommand
             return true;
         }
         sender.sendMessage(usage);
-        System.out.println(subCommands);
         return true;
     }
     
     public LocalCommand registerSubCommand(LocalCommand lc) {
         for (String s : lc.getAliases()) {
-            subCommands.put(s, lc);
+            subCommandMap.put(s, lc);
         }
+        subCommands.add(lc);
         return lc;
     }
     
@@ -87,7 +87,9 @@ public class SuperCommand extends DynamicCommandExecutor implements LocalCommand
         Class<? extends LocalCommandExecutor> clazz = lce.getClass();
         List<LocalCommand> commands = new ArrayList<>();
         for (Method m : clazz.getDeclaredMethods()) {
+            System.out.println("loop: " + m.getName());
             if (m.isAnnotationPresent(Command.class)) {
+                System.out.println("registering method!");
                 commands.add(registerSubCommand(new ExecutorWrapper(this, lce, m)));
             }
         }
@@ -105,12 +107,12 @@ public class SuperCommand extends DynamicCommandExecutor implements LocalCommand
 
     @Override
     public Collection<LocalCommand> getSubCommands() {
-        return subCommands.values();
+        return subCommands;
     }
 
     @Override
     public Set<String> getSubCommandAliases() {
-        return subCommands.keySet();
+        return subCommandMap.keySet();
     }
 
     @Override
@@ -153,7 +155,7 @@ public class SuperCommand extends DynamicCommandExecutor implements LocalCommand
 
     @Override
     public LocalCommand getSubCommand(String alias) {
-        return subCommands.get(alias);
+        return subCommandMap.get(alias);
     }
 
     @Override
@@ -161,7 +163,7 @@ public class SuperCommand extends DynamicCommandExecutor implements LocalCommand
         if (aliases.length == 0) {
             return null;
         }
-        LocalCommand sub = subCommands.get(aliases[0]);
+        LocalCommand sub = subCommandMap.get(aliases[0]);
         if (aliases.length == 1 || sub == null) {
             return sub;
         }
